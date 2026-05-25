@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barangay Care Portal</title>
+    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <audio id="alertSound" src="https://orangefreesounds.com/wp-content/uploads/2024/03/Alert-beep-sound-effect.mp3" preload="auto"></audio>
+
+    <header>
+        <h1>Welcome to the Barangay Care Portal</h1>
+        <p>A centralized platform for reporting emergencies, safety concerns, and anonymous tips within the barangay.</p>
+        <button class="admin-btn" onclick="checkAdmin()">A</button>
+    </header>
+
+    <nav>
+        <button onclick="showPage('home')">Home</button>
+        <button onclick="showPage('resident')">Resident Access</button>
+    </nav>
+
+    <div class="container center" id="home">
+        <h2>Community Safety Starts With You</h2>
+        <p>Use this portal to report incidents or submit anonymous tips to help barangay officials respond quickly.</p>
+        
+        <h1 class="barangay-title">BARANGAY BALAQUID</h1>
+        <img src="logo.jpg" alt="Logo" style="width: 150px !important; height: auto; display: block; margin: 10px auto;">
+        
+        <div class="officials-list">
+            <p>Hon. Ricardo Cabulang | Hon. Imelda Veginia | Hon. Inocentes Ryan Anota</p>
+            <p>Hon. Edgar Corpin | Hon. Roger Ayuste | Hon. Cristina Aragon</p>
+            <p>Hon. Jolito Cabia | Hon. Elenita Sumayan</p>
+        </div>
+    </div>
+    <div class="container center" id="resident">
+        <h2>Resident Services</h2>
+        <div class="options">
+            <div class="option-card" onclick="showPage('report')">Report Incident / Submit Tip</div>
+        </div>
+    </div>
+
+    <div class="container" id="report">
+        <h2>Submit a Report</h2>
+        
+        <div style="margin-bottom: 20px; background: #f1f5f9; padding: 15px; border-radius: 8px; border-left: 5px solid #6b7280;">
+            <label style="display: flex; align-items: center; cursor: pointer; margin-top: 0;">
+                <input type="checkbox" id="anonymousToggle" onchange="toggleAnonymous()" style="width: auto; margin-right: 10px; margin-top: 0;">
+                <span style="font-size: 14px; color: #374151;"><strong>Submit Anonymously</strong> (Your email will not be required)</span>
+            </label>
+        </div>
+
+        <form id="reportForm" enctype="multipart/form-data">
+            <div id="reporterInfo">
+                <label>Email</label>
+                <input type="email" name="reporter" id="reporterInput" placeholder="example@email.com" required>
+            </div>
+
+            <label>Emergency Type / Concern</label>
+            <select name="type" required>
+                <option value="">-- Select --</option>
+                <option>Fire</option>
+                <option>Crime</option>
+                <option>Medical</option>
+                <option>Flood</option>
+                <option>Minor Dispute / Tip</option>
+            </select>
+
+            <label>Urgency Level</label>
+            <select name="urgency" required>
+                <option value="">-- Select --</option>
+                <option>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+                <option>Critical</option>
+            </select>
+
+            <label>Location</label>
+<select name="location" required>
+    <option value="">-- Select Zone --</option>
+    <option value="Zone 1-Ariquin">Zone 1-Ariquin</option>
+    <option value="Zone 2-Basud">Zone 2-Basud</option>
+    <option value="Zone 3-Proper">Zone 3-Proper</option>
+    <option value="Zone 4-Proper">Zone 4-Proper</option>
+    <option value="Zone 5-Palawin">Zone 5-Palawin</option>
+    <option value="Zone 6-Puntod">Zone 6-Puntod</option>
+    <option value="Zone 7-Lawaan & Tagaytay">Zone 7-Lawaan & Tagaytay</option>
+</select>
+<label>Pin Exact Location (Click on Map)</label>
+<div id="map" style="height: 300px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ccc;"></div>
+
+<input type="hidden" name="lat" id="latInput">
+<input type="hidden" name="lng" id="lngInput">
+
+            <label>Description</label>
+            <textarea rows="4" name="details" placeholder="Please Describe the Incident" required></textarea>
+
+            <label>Photo</label>
+            <input type="file" name="photo" accept="image/*">
+
+            <label>Video</label>
+            <input type="file" name="video" accept="video/*">
+
+            <button type="button" class="submit-btn" onclick="submitReport()">Submit Report</button>
+        </form>
+    </div>
+
+    <div class="container" id="adminLogin">
+        <h2>Admin Login</h2>
+        <label>Username</label>
+        <input id="adminUser">
+        <label>Password</label>
+        <input id="adminPass" type="password">
+        <button class="submit-btn" onclick="adminLogin()">Login</button>
+    </div>
+
+    <div class="container" id="adminDashboard">
+        <h2>Admin Dashboard</h2>
+        <button class="submit-btn" onclick="printDashboard()" style="max-width:300px;margin-bottom:20px;">Print Details</button>
+        <div class="print-section">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Reporter</th><th>Type</th><th>Urgency</th><th>Location</th><th>Description</th><th>Attachment</th><th>Time</th><th>Hotline</th><th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="incidentTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>© 2026 Barangay Care Portal</footer>
+    <script src="script.js"></script>
+</body>
+</html>
